@@ -7,31 +7,39 @@ var filteredData = dataSet;
 
 // Function to get the total nummber of Pages based on the result
 function PageCalculate(list){
-  return list.length/resultsPerPage;
+  return Math.ceil(list.length/resultsPerPage);
 }
 
 // Next page function
 function nextPage(){
+  if(currentPage<PageCalculate(filteredData)){
   currentPage += 1;
   LoadList();
+  }
 }
 
 // Previous page function
 function previousPage(){
+  if(currentPage>1){
   currentPage -= 1;
   LoadList();
+  }
 }
 
 // First page function
 function firstPage(){
+  if(currentPage>=1){
   currentPage = 1;
   LoadList();
+  }
 }
 
 // Last Page function
 function lastPage(){
+  if(currentPage<=PageCalculate(filteredData)){
   currentPage = PageCalculate(filteredData);
   LoadList();
+  } 
 }
 
 // Load List Function=>Splitting the results into appropriate pages
@@ -46,6 +54,8 @@ function LoadList(){
   renderTable(pageList);
   numberofPages = PageCalculate(filteredData);
   check();
+  console.log("Showing Page "+currentPage + " of " + numberofPages);
+  $pageresults.innerText="Showing Page "+currentPage + " of " + numberofPages;
 }
 
 // Function to disable the first and previous button if we are on page 1 
@@ -111,7 +121,7 @@ var $countryInput = document.querySelector("#countryInput");
 var $shapeInput = document.querySelector("#shapeInput");
 var $searchBtn = document.querySelector("#search");
 var $resetBtn =  document.querySelector("#reset");
-
+var $pageresults = document.getElementById("pageresult")
 function renderTable(dataset){
   console.log("Rendering Table");
   var firstindex = ((currentPage - 1) * resultsPerPage); 
@@ -136,18 +146,12 @@ function handleSearchButton(event){
   filteredData=dataSet;
 	console.log("Button Clicked Successfully")
   filteredData = applyfilters(filteredData);
+  // The new results has to be displayed from Page 1
+  currentPage=1;
   LoadList();
 };
 
-$filter_toggle = document.getElementById("FilterBtn");
 
-$filter_toggle.addEventListener("click",function(event){
-    event.preventDefault();
-    var $filtercard = document.querySelector("#filterbox");
-    var $table = document.querySelector("#UFO-table");
-    $filtercard.classed("collapsed",!$filtercard.classed("collapsed"));
-    $table.classed("col-md-9",!$table.classed("col-md-9"));
-});
 // Add an event listener for the seach button and call the function upon click
 $searchBtn.addEventListener("click",handleSearchButton);
 
